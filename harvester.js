@@ -13,7 +13,7 @@ module.exports = function(creep)
     var spawn;
     if (creep.memory.spawnID == null)
     {
-        spawn = creep.room.find(FIND_spawnS)[0];
+        spawn = creep.room.find(FIND_SPAWNS)[0];
         creep.memory.spawnID = spawn.id;
     } else
     {

@@ -9,12 +9,44 @@ module.exports = function(creep)
     {
         source = Game.getObjectById(creep.memory.sourceID);
     }
+
+    var spawn;
+    if (creep.memory.spawnID == null)
+    {
+        spawn = creep.room.find(FIND_spawnS)[0];
+        creep.memory.spawnID = spawn.id;
+    } else
+    {
+        spawn = Game.getObjectById(creep.memory.spawnID);
+    }
     
-    
-    
-	//var source = creep.room.find(FIND_SOURCES)[0];
-    console.log(source.pos.x);
-    console.log(source.pos.y);
-    console.log(creep.moveTo(source.pos.x, source.pos.y));
-    console.log(creep.harvest(source));
+	var isGoingOut;
+	if (creep.memory.isGoingOut == null)
+	{
+		isGoingOut = true;
+		creep.memory.isGoingOut = true;
+	} else
+	{
+		isGoingOut = creep.memory.isGoingOut;
+	}
+
+	if (isGoingOut)
+	{
+		creep.moveTo(source.pos.x, source.pos.y);
+		creep.harvest(source);
+		if (creep.carry.energy >= creep.carryCapacity)
+		{
+			isGoingOut = false;
+		}
+	} else
+	{
+		creep.moveTo(spawn.pos.x, spawn.pos.y);
+		creep.transferEnergy(spawn);
+		if (creep.carry.energy <= 0)
+		{
+			isGoingOut = true;
+		}
+	}
+
+	creep.memory.isGoingOut = isGoingOut;
 }
